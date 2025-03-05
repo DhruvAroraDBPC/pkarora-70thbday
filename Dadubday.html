@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy 70th Birthday, Dadu!</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f9f3e6;
+      color: #333;
+    }
+    .container {
+      margin: 50px auto;
+      max-width: 600px;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #d48806;
+    }
+    #messages {
+      margin-top: 20px;
+      text-align: left;
+      background: #fff5e1;
+      padding: 10px;
+      border-radius: 5px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .message {
+      border-bottom: 1px solid #ddd;
+      padding: 5px 0;
+    }
+    textarea {
+      width: 90%;
+      height: 80px;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Happy 70th Birthday, Parveen Kumar Arora!</h1>
+    <p>We are celebrating a special milestone. Join us in making this day unforgettable!</p>
+    
+    <h2>Leave Your Wishes</h2>
+    <textarea id="messageInput" placeholder="Write your message here..."></textarea>
+    <br>
+    <button onclick="addMessage()">Send</button>
+    
+    <div id="messages">
+      <h3>Messages:</h3>
+    </div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  
+  <script>
+    var firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+    firebase.initializeApp(firebaseConfig);
+    var database = firebase.database();
+
+    function addMessage() {
+      var messageText = document.getElementById('messageInput').value;
+      if (messageText.trim() === "") {
+        alert("Please enter a message before sending.");
+        return;
+      }
+      var newMessageRef = database.ref('messages').push();
+      newMessageRef.set({ text: messageText });
+      document.getElementById('messageInput').value = "";
+    }
+
+    function displayMessage(message) {
+      var messageDiv = document.createElement('div');
+      messageDiv.className = 'message';
+      messageDiv.innerText = message;
+      document.getElementById('messages').appendChild(messageDiv);
+    }
+
+    database.ref('messages').on('child_added', function(snapshot) {
+      var message = snapshot.val().text;
+      displayMessage(message);
+    });
+  </script>
+</body>
+</html>
